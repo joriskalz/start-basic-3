@@ -20,11 +20,19 @@ import { Route as LayoutLayout2Import } from './routes/_layout/_layout-2'
 import { Route as PostsPostIdDeepImport } from './routes/posts_.$postId.deep'
 import { Route as LayoutLayout2LayoutBImport } from './routes/_layout/_layout-2/layout-b'
 import { Route as LayoutLayout2LayoutAImport } from './routes/_layout/_layout-2/layout-a'
+import { Route as BlogImport } from './routes/blog'
+import { Route as BlogIndexImport } from './routes/blog.index'
+import { Route as BlogSlugImport } from './routes/blog.$slug'
 
 // Create/Update Routes
 
 const PostsRoute = PostsImport.update({
   path: '/posts',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const BlogRoute = BlogImport.update({
+  path: '/blog',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -43,9 +51,19 @@ const PostsIndexRoute = PostsIndexImport.update({
   getParentRoute: () => PostsRoute,
 } as any)
 
+const BlogIndexRoute = BlogIndexImport.update({
+  path: '/',
+  getParentRoute: () => BlogRoute,
+} as any)
+
 const PostsPostIdRoute = PostsPostIdImport.update({
   path: '/$postId',
   getParentRoute: () => PostsRoute,
+} as any)
+
+const BlogSlugRoute = BlogSlugImport.update({
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
 } as any)
 
 const LayoutLayout2Route = LayoutLayout2Import.update({
@@ -93,6 +111,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PostsImport
       parentRoute: typeof rootRoute
     }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogImport
+      parentRoute: typeof rootRoute
+    }
     '/_layout/_layout-2': {
       id: '/_layout/_layout-2'
       path: ''
@@ -107,12 +132,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PostsPostIdImport
       parentRoute: typeof PostsImport
     }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugImport
+      parentRoute: typeof BlogImport
+    }
     '/posts/': {
       id: '/posts/'
       path: '/'
       fullPath: '/posts/'
       preLoaderRoute: typeof PostsIndexImport
       parentRoute: typeof PostsImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexImport
+      parentRoute: typeof BlogImport
     }
     '/_layout/_layout-2/layout-a': {
       id: '/_layout/_layout-2/layout-a'
@@ -149,6 +188,7 @@ export const routeTree = rootRoute.addChildren({
     }),
   }),
   PostsRoute: PostsRoute.addChildren({ PostsPostIdRoute, PostsIndexRoute }),
+  BlogRoute: BlogRoute.addChildren({ BlogSlugRoute, BlogIndexRoute }),
   PostsPostIdDeepRoute,
 })
 
